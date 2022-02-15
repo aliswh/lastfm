@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
  
 class Source(ABC):
     @abstractmethod
-    def Get(self, request) -> str:
+    def get(self, request) -> str:
         """
         Process a request and return a path containing the result.
 
@@ -12,7 +12,7 @@ class Source(ABC):
 
 class DataLake(ABC):
     @abstractmethod
-    def Write(self, file_path:str, dest_path:str):
+    def write(self, file_path:str, dest_path:str):
         """
         Write a file in the specified destination
 
@@ -26,20 +26,20 @@ class Writer(ABC):
         pass
 
     @abstractmethod
-    def Write(self, request, dest_path:str):
+    def write(self, request, dest_path:str):
         """
         Process a request and save in destination.
 
         """
         pass
         
-        
+
 class BatchWriter(Writer):
     def __init__(self, source, destination):
         self.source = source
         self.dest = destination
 
-    def Write(self, request, dest_path):
-        file_path = self.source.Get(request)
-        self.dest.Write(file_path, dest_path)
+    def write(self, request, dest_path):
+        file_path = self.source.get(request)
+        self.dest.write(file_path, dest_path)
 
