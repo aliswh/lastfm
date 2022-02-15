@@ -4,7 +4,7 @@ class Source(ABC):
     @abstractmethod
     def get(self, request) -> str:
         """
-        Process a request and return a path containing the result.
+        Process a request and return the result.
 
         """
         pass 
@@ -12,9 +12,9 @@ class Source(ABC):
 
 class DataLake(ABC):
     @abstractmethod
-    def write(self, file_path:str, dest_path:str):
+    def write(self, data, dest_path:str):
         """
-        Write a file in the specified destination
+        Write data in the specified destination
 
         """
         pass
@@ -40,6 +40,6 @@ class BatchWriter(Writer):
         self.dest = destination
 
     def write(self, request, dest_path):
-        file_path = self.source.get(request)
-        self.dest.write(file_path, dest_path)
+        data = self.source.get(request)
+        self.dest.write(data, dest_path)
 
