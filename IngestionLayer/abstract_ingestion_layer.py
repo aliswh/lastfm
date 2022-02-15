@@ -18,6 +18,14 @@ class DataLake(ABC):
 
         """
         pass
+    
+    @abstractmethod
+    def read(self, path:str):
+        """
+        Write data from a specified path
+
+        """
+        pass
 
 
 class Writer(ABC):
