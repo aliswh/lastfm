@@ -19,10 +19,11 @@ class GoogleStorage(DataLake):
         )
         return blob.public_url
 
-    def read(self, file_path):
-        blob = self.bucket.get_blob(file_path).download_as_string()
-        file_data = json.loads(blob)
-        return file_data
-
-    def list_dir(self, path):
-        return self.client.list_blobs(self.bucket, prefix=path)
+    def read(self, path, dir=False):
+        if dir:
+            blobs = self.client.list_blobs(self.bucket, prefix=path)
+            data = [json.loads(blob.download_as_string()) for blob in blobs]
+        else:
+            blob = self.bucket.get_blob(path).download_as_string()
+            data = json.loads(blob)
+        return data
