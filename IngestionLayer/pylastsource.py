@@ -38,22 +38,36 @@ class PyLastSource(Source):
       """ Save request result in a file with timestamp.
       """
       timestamp = time.strftime("%Y%m%d-%H%M%S")
-      f = open(f"data/{request+timestamp}", 'w', encoding="utf-8") # TODO: should name include something else?
-      f.write(result.__repr__()) # TODO: write to GCS, to json?
+      f = open(f"{request+timestamp}.json", 'w', encoding="utf-8") # TODO: include username in recent tracks
+      f.write(result) 
       f.close()
 
     def get_user(user_name):
-      """ Return User object.
-      """
       return self.network.get_user(user_name)
 
     def get_artist(artist_name):
-      return self.network.get_artist(artist_name)
+      return self.network.get_artist(artist_name)    
 
     def get_track(artist, title):
-      """ Return Track object.
-      """
       return self.network.get_track(artist,title)
+
+    def get_tags(self):
+      """ Returns a list of the tags set by the user to this object."""
+      return self.get_tags()
+
+    def get_track_json(playedtrack):
+      """ Return PlayedTrack json.
+      """
+      date = playedtrack.playback_date
+
+      d = {
+        'artist':playedtrack.track.artist.name, # delete name to get obj Artist
+        'title':playedtrack.track.title,
+        'duration':playedtrack.track.get_duration(), # TODO: why the slashes in all names?
+        'album': playedtrack.album,
+        'timestamp': playedtrack.timestamp
+      }
+      return date, json.dumps(d)
 
     def get_recent_tracks(user, 
       limit=10, cacheable=True, stream=False,
@@ -61,16 +75,17 @@ class PyLastSource(Source):
     ):
       """ Get a list of this user's recent tracks.
       """
-      return user.get_recent_tracks(
+      recent = user.get_recent_tracks(
         limit=limit, cacheable=cacheable, stream=stream, 
         time_from=time_from, time_to=time_to, now_playing=now_playing
       )
+      d = {}
+      for i,track in enumerate(recent):
+        key, value = get_track_json(track)
+        d[key] = value
+      return user, json.dumps(d)
 
-    def get_tags(self):
-      """ Returns a list of the tags set by the user to this object."""
-      return self.get_tags()
-
-    requests_dict = {
+    requests_dict = { # TODO: is this necessary? have only one possible request
         'user': get_user,
         'artist': get_artist,
         'track': get_track,
