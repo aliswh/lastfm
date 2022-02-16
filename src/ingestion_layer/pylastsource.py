@@ -179,6 +179,6 @@ class PyLastSource(Source):
     }
 
     result = requests_dict[request](*args, **kwargs)
-    return json.dumps(result)
+    return result
 
 
