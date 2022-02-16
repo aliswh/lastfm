@@ -17,6 +17,14 @@ class PyLastSource(Source):
       -  API_SECRET,
       -  username,
       -  password
+
+    Requests:
+      'user': get_user,
+      'artist': get_artist,
+      'track': get_track,
+      'recent_tracks': get_recent_tracks,
+      'tags': get_tags,
+      'user_pool': user_pool
     '''
     password_hash = pylast.md5(AUTH_DATA['password'])
 
@@ -66,12 +74,18 @@ class PyLastSource(Source):
     def get_user(user_name):
       """ Returns User dict.
       """
-      user = self.network.get_user(user_name)
+      if not isinstance(user_name, pylast.User):
+        user = self.network.get_user(user_name)
+      else: user = user_name
+
+      try: country = user.get_country().name 
+      except AttributeError: country = None
+
       d = {
         'user' : user.name,
         'playcount': user.get_playcount(),
         'reg_date' : user.get_registered(),
-        'country' : user.get_country().name,
+        'country' : country,
         'url' : user.get_url()
       }
       d['id'] = give_id(d['user']) 
@@ -93,10 +107,14 @@ class PyLastSource(Source):
       """ Returns Track dict.
       """
       track = self.network.get_track(artist,title)
+
+      try: album = track.get_album().title
+      except AttributeError: album = None
+
       d = {
         'artist' : track.artist.name,
         'title': track.title,
-        'album': track.get_album().title,
+        'album': album,
         'duration': track.get_duration(),
         'tags': get_tags(track),
         'url': track.get_url()
@@ -134,20 +152,22 @@ class PyLastSource(Source):
       d['id'] = give_id(user_name) # TODO
       return d
 
-    def user_pool(user, MAX=20):
+    def user_pool(user_name, MAX=20):
       """ Returns friends and friends of friends of seed user until len(user_pool) gets to MAX.
       """
+      user = self.network.get_user(user_name)
       def get_friend(theuser):
           for friend in theuser.get_friends(limit=100):
               if len(get_friend.user_pool) < MAX and friend not in get_friend.user_pool:
-                get_friend.user_pool.append(friend)
+                fr = get_user(friend)
+                get_friend.user_pool.append(fr)
           if len(get_friend.user_pool) < MAX:
               get_friend.index += 1
               get_friend(get_friend.user_pool[index])
       get_friend.user_pool = []
       get_friend.index = 0
       get_friend(user)
-      return get_friend.user_pool 
+      return get_friend.user_pool
 
     requests_dict = { 
         'user': get_user,

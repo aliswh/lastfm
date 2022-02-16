@@ -20,3 +20,6 @@ print(track_json)
 
 user_tracks_json = p.get('recent_tracks', SEED_USER, limit=10,  time_to=onemonthago)
 print(user_tracks_json)
+
+user_pool_json = p.get('user_pool', SEED_USER, MAX=10)
+print(user_pool_json)
