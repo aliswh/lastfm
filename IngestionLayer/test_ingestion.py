@@ -37,8 +37,13 @@ onemonthago = timestamp_x_days_ago(30)
 print(datetime.fromtimestamp(onemonthago))
 
 SEED_USER = 'dars4' # random user name found on last.fm
-someuser = p.get('user', False, SEED_USER)
+user = p.network.get_user(SEED_USER)
+user_json = p.get('user', SEED_USER)
+print(user_json)
+user_tracks_json = p.get('recent_tracks', user, limit=10,  time_to=onemonthago)
+print(user_tracks_json)
+"""
 user_pool = get_new_friends(someuser, MAX=3)
-
 for user in user_pool:
-    p.get('recent_tracks', True, user, limit=10,  time_to=onemonthago)
+    p.get('recent_tracks', user, limit=10,  time_to=onemonthago)
+"""

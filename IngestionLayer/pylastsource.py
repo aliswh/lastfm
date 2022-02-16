@@ -26,7 +26,7 @@ class PyLastSource(Source):
         password_hash=password_hash
     )
 
-  def get(self, request=None, save_file=False, *args, **kwargs): 
+  def get(self, request=None, *args, **kwargs): 
     ''' Query on the network and return the result on file.
     
     Args: 
@@ -34,43 +34,60 @@ class PyLastSource(Source):
     Return: 
       path containing the result
     '''
-    def save_result(request_name, result):
+    def save_result(request_name, result, info=''):
       """ Save request result in a file with timestamp.
       """
-      timestamp = time.strftime("%Y%m%d-%H%M%S")
-      f = open(f"{request+timestamp}.json", 'w', encoding="utf-8") # TODO: include username in recent tracks
-      f.write(json.dumps(result)) 
+      #timestamp = time.strftime("%Y%m%d-%H%M%S") #TODO serve?
+      filename = f"{info+request+str(result['id'])}.json"
+      f = open(filename, 'w', encoding="utf-8")
+      f.write(json.dumps(result))
       f.close()
 
+    def give_id(some_string):
+      return hash(some_string)
+
     def get_user(user_name):
-      return self.network.get_user(user_name)
+      user = self.network.get_user(user_name)
+      d = {
+        'user' : user.name,
+      }
+      d['id'] = give_id(d['user']) 
+      return d
 
     def get_artist(artist_name):
-      return self.network.get_artist(artist_name)    
+      artist = self.network.get_artist(artist_name)
+      d = {
+        'artist' : artist.name,
+      }
+      d['id'] = give_id(d['artist']) 
+      return d
 
     def get_track(artist, title):
-      return self.network.get_track(artist,title)
+      track = self.network.get_track(artist,title)
+      d = {
+        'artist' : track.artist.name,
+        'title': track.title,
+      }
+      d['id'] = give_id(d['artist']+d['title']) 
+      return d
 
     def get_tags(self):
-      """ Returns a list of the tags set by the user to this object."""
+      """ Returns a list of the tags set by the user to this object.""" # TODO
       return self.get_tags()
 
-    def get_track_json(playedtrack):
-      """ Return PlayedTrack json.
+    def get_playedtrack(playedtrack):
+      """ Return PlayedTrack dict.
       """
-      date = playedtrack.playback_date # TODO better format
-
       d = {
-        'artist':playedtrack.track.artist.name, # delete name to get obj Artist
-        'title':playedtrack.track.title,
-        'duration':playedtrack.track.get_duration(),
+        'track':str(playedtrack.track), # TODO
+        'date':playedtrack.playback_date,
         'album': playedtrack.album,
         'timestamp': playedtrack.timestamp
       }
-      return date, d
+      return d
 
-    def get_recent_tracks(user, 
-      limit=10, cacheable=True, stream=False,
+    def get_recent_tracks(
+      user, limit=10, cacheable=True, stream=False,
       time_from=None, time_to=None, now_playing=False
     ):
       """ Get a list of this user's recent tracks.
@@ -81,11 +98,11 @@ class PyLastSource(Source):
       )
       d = {}
       for i,track in enumerate(recent):
-        key, value = get_track_json(track)
-        d[key] = value
+        d[i] = get_playedtrack(track)
+      d['id'] = give_id(str(user)) # TODO
       return d
 
-    requests_dict = { # TODO: is this necessary? have only one possible request
+    requests_dict = { 
         'user': get_user,
         'artist': get_artist,
         'track': get_track,
@@ -94,7 +111,8 @@ class PyLastSource(Source):
     }
 
     result = requests_dict[request](*args, **kwargs)
-    if save_file: save_result(request, result)
+    info = str(args[0])+'-' if request == 'recent_tracks' else ''
+    save_result(request, result, info)
     return result
 
 
