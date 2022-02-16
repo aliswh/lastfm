@@ -1,9 +1,7 @@
 from config import AUTH_DATA
-from pylastsource import PyLastSource
+from .pylastsource import PyLastSource
 import time
 from datetime import datetime
-
-
 
 
 ### EXAMPLES, DELETE

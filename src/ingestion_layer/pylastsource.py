@@ -96,7 +96,7 @@ class PyLastSource(Source):
       d = {
         'artist' : track.artist.name,
         'title': track.title,
-        'album': track.get_album().name,
+        'album': track.get_album().title,
         'duration': track.get_duration(),
         'tags': get_tags(track),
         'url': track.get_url()
@@ -107,13 +107,14 @@ class PyLastSource(Source):
     def get_playedtrack(playedtrack):
       """ Returns PlayedTrack dict.
       """
-      print(playedtrack.track.artist.name, playedtrack.track.title)
       d = {
-        'track':get_track(playedtrack.track.artist.name, playedtrack.track.title)['id'], 
+        'artist':playedtrack.track.artist.name,
+        'title':playedtrack.track.title, 
         'date':playedtrack.playback_date,
         'album': playedtrack.album,
         'timestamp': playedtrack.timestamp
       }
+      d['id'] = give_id(d['artist']+d['title'])
       return d
 
     def get_recent_tracks(
