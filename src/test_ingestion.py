@@ -1,5 +1,5 @@
-from config import AUTH_DATA
-from .pylastsource import PyLastSource
+from ingestion_layer.pylastsource import *
+from ingestion_layer.config import *
 import time
 from datetime import datetime
 
