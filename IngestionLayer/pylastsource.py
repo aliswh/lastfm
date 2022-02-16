@@ -26,7 +26,7 @@ class PyLastSource(Source):
         password_hash=password_hash
     )
 
-  def get(self, request=None, save_file=False, *args, **kwargs):
+  def get(self, request=None, save_file=False, *args, **kwargs): 
     ''' Query on the network and return the result on file.
     
     Args: 
@@ -39,7 +39,7 @@ class PyLastSource(Source):
       """
       timestamp = time.strftime("%Y%m%d-%H%M%S")
       f = open(f"{request+timestamp}.json", 'w', encoding="utf-8") # TODO: include username in recent tracks
-      f.write(result) 
+      f.write(json.dumps(result)) 
       f.close()
 
     def get_user(user_name):
@@ -58,16 +58,16 @@ class PyLastSource(Source):
     def get_track_json(playedtrack):
       """ Return PlayedTrack json.
       """
-      date = playedtrack.playback_date
+      date = playedtrack.playback_date # TODO better format
 
       d = {
         'artist':playedtrack.track.artist.name, # delete name to get obj Artist
         'title':playedtrack.track.title,
-        'duration':playedtrack.track.get_duration(), # TODO: why the slashes in all names?
+        'duration':playedtrack.track.get_duration(),
         'album': playedtrack.album,
         'timestamp': playedtrack.timestamp
       }
-      return date, json.dumps(d)
+      return date, d
 
     def get_recent_tracks(user, 
       limit=10, cacheable=True, stream=False,
@@ -83,7 +83,7 @@ class PyLastSource(Source):
       for i,track in enumerate(recent):
         key, value = get_track_json(track)
         d[key] = value
-      return user, json.dumps(d)
+      return d
 
     requests_dict = { # TODO: is this necessary? have only one possible request
         'user': get_user,
