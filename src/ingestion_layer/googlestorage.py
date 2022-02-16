@@ -24,5 +24,5 @@ class GoogleStorage(DataLake):
         file_data = json.loads(blob)
         return file_data
 
-    def list_blobs(self):
-        return self.client.list_blobs(self.bucket)
+    def list_blobs(self, path):
+        return self.client.list_blobs(self.bucket+path)
