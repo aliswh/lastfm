@@ -4,7 +4,7 @@ import pylast
 import hashlib
 from datetime import datetime, date, timedelta
 
-from abstract_ingestion_layer import Source
+from .abstract_ingestion_layer import Source
 
 TAG_LIMIT = 5
 
