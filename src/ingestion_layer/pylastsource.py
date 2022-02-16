@@ -2,7 +2,11 @@ import requests
 import json
 import pylast
 import hashlib
+from datetime import datetime, date, timedelta
+
 from abstract_ingestion_layer import Source
+
+TAG_LIMIT = 5
 
 class PyLastSource(Source):
   def __init__(self, AUTH_DATA:dict):
@@ -23,6 +27,18 @@ class PyLastSource(Source):
         password_hash=password_hash
     )
 
+  # utility
+  def timestamp_x_days_ago(self, n_days):
+    """ Returns (int) timestamp from X days ago from now.
+    """
+    d = date.today() - timedelta(days=n_days)
+    dt = datetime(
+            year=d.year,
+            month=d.month,
+            day=d.day
+        )
+    return int(dt.timestamp())  
+
   def get(self, request=None, *args, **kwargs): 
     ''' Query on the network and return the result on file.
     
@@ -31,13 +47,25 @@ class PyLastSource(Source):
     Return: 
       path containing the result
     '''
-
+    # utility
     def give_id(some_string):
+      """ Returns hashed (sha1) string to be used as ID.
+      """
       key = hashlib.sha1()
       key.update(some_string.encode('utf-8'))
       return key.hexdigest()
 
+    # LastFM
+    def get_tags(some_obj):
+      """ Returns a dict of the top tags set by users to this object.
+      """ 
+      tag = {tag.item.name for tag in some_obj.get_top_tags(limit=TAG_LIMIT)}
+      tag = {t:give_id(t) for t in tag}
+      return tag
+
     def get_user(user_name):
+      """ Returns User dict.
+      """
       user = self.network.get_user(user_name)
       d = {
         'user' : user.name,
@@ -50,6 +78,8 @@ class PyLastSource(Source):
       return d
 
     def get_artist(artist_name):
+      """ Returns Artist dict.
+      """
       artist = self.network.get_artist(artist_name)
       d = {
         'artist' : artist.name,
@@ -60,26 +90,26 @@ class PyLastSource(Source):
       return d
 
     def get_track(artist, title):
+      """ Returns Track dict.
+      """
       track = self.network.get_track(artist,title)
       d = {
         'artist' : track.artist.name,
         'title': track.title,
-        'album': track.get_album(),
+        'album': track.get_album().name,
         'duration': track.get_duration(),
+        'tags': get_tags(track),
         'url': track.get_url()
       }
       d['id'] = give_id(d['artist']+d['title']) 
       return d
 
-    def get_tags(self):
-      """ Returns a list of the tags set by the user to this object.""" # TODO
-      return self.get_tags()
-
     def get_playedtrack(playedtrack):
-      """ Return PlayedTrack dict.
+      """ Returns PlayedTrack dict.
       """
+      print(playedtrack.track.artist.name, playedtrack.track.title)
       d = {
-        'track':get_track(playedtrack.track.artist, playedtrack.track.title)['id'], 
+        'track':get_track(playedtrack.track.artist.name, playedtrack.track.title)['id'], 
         'date':playedtrack.playback_date,
         'album': playedtrack.album,
         'timestamp': playedtrack.timestamp
@@ -90,16 +120,16 @@ class PyLastSource(Source):
       user_name, limit=10, cacheable=True, stream=False,
       time_from=None, time_to=None, now_playing=False
     ):
-      """ Get a list of this user's recent tracks.
+      """ Get a dict of this user's recent tracks. 
       """
       user = self.network.get_user(user_name)
-      recent = user.get_recent_tracks( # TODO crea oggetto user da ID
+      recent = user.get_recent_tracks( 
         limit=limit, cacheable=cacheable, stream=stream, 
         time_from=time_from, time_to=time_to, now_playing=now_playing
       )
       d = {}
       for i,track in enumerate(recent):
-        d[i] = get_playedtrack(track)
+        d[i] = get_playedtrack(track) # TODO timestamp o ordine? o lista?
       d['id'] = give_id(user_name) # TODO
       return d
 
