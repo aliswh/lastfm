@@ -167,7 +167,6 @@ class PyLastSource(Source):
       get_friend.user_pool = []
       get_friend.index = 0
       get_friend(user)
-      print(get_friend.user_pool)
       return get_friend.user_pool
 
     requests_dict = { 
