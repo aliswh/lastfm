@@ -1,4 +1,4 @@
-from abstract_ingestion_layer import DataLake
+from .abstract_ingestion_layer import DataLake
 from google.cloud import storage
 import json
 
