@@ -9,8 +9,10 @@ class GoogleStorage(DataLake):
         self.client = storage.Client.from_service_account_json(creds_path)
         self.bucket = self.client.get_bucket(bucket_name)
 
-    def write(self, data, dest_path):
+    def write(self, data, dest_path, jsonize = False):
         blob = self.bucket.blob(dest_path)
+        if jsonize:
+            data = json.dumps(data)
         blob.upload_from_string(
             data = data,
             content_type='application/json'
@@ -18,6 +20,9 @@ class GoogleStorage(DataLake):
         return blob.public_url
 
     def read(self, file_path):
-        blob = self.bucket.get_blob(file_path)
-        file_data = json.load(blob)
+        blob = self.bucket.get_blob(file_path).download_as_string()
+        file_data = json.loads(blob)
         return file_data
+
+    def list_blobs(self):
+        return self.client.list_blobs(self.bucket)

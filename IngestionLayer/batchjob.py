@@ -8,9 +8,9 @@ source = PyLastSource(AUTH_DATA)
 SEED_USER = 'dars4'
 users = source.get('users',SEED_USER)
 for json_user in users:
-    storage.write(json_user, f'user_{json_user.id}')
+    storage.write(json_user, f'/users/user_{json_user.id}')
     json_recent_tracks = source.get('recent_tracks',json_user.name)
-    storage.write(json_recent_tracks, f'user_{json_user.id}_recent_tracks')
+    storage.write(json_recent_tracks, f'/recent_tracks/user_{json_user.id}_recent_tracks')
     for track in json_recent_tracks:
         json_track = source.get('track', track.artist, track.title)
-        storage.write(json_track, f'track_{json_track.id}')
+        storage.write(json_track, f'/tracks/track_{json_track.id}')
