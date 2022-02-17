@@ -11,7 +11,7 @@ class BatchWriter(Writer):
             if debug:
                 print(f'User:{user}')
             self.dest.write(user, dest_path+f"users/user_{user['id']}")
-            recent_tracks = self.dest.get('recent_tracks',user['user'],limit=tracks_limit)
+            recent_tracks = self.source.get('recent_tracks',user['user'],limit=tracks_limit)
             self.dest.write(recent_tracks, dest_path+f"recent_tracks/user_recent_tracks_{user['id']}")
             for track in recent_tracks[1:]:
                 track = self.source.get('track', track['artist'], track['title'])
