@@ -5,9 +5,9 @@ import hashlib
 from datetime import datetime, date, timedelta
 
 from .abstract_ingestion_layer import Source
+from .config import *
 
-# restricted number of tags to maintain quality and save storage
-TAG_LIMIT = 5
+
 
 class PyLastSource(Source):
   def __init__(self, AUTH_DATA:dict):
