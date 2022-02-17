@@ -6,6 +6,7 @@ from datetime import datetime, date, timedelta
 
 from .abstract_ingestion_layer import Source
 
+# restricted number of tags to maintain quality and save storage
 TAG_LIMIT = 5
 
 class PyLastSource(Source):
@@ -138,7 +139,7 @@ class PyLastSource(Source):
       try: url = track.get_url()
       except: url = None
 
-      try: tags = [item.item.name for item in track.get_top_tags()[:5]]
+      try: tags = {item.item.name:item.weight for item in track.get_top_tags()[:TAG_LIMIT]} 
       except: tags = None
 
       d = {
