@@ -34,3 +34,6 @@ print(json.dumps(track_json))
 
 track_json = p.get('track', 'thisartistdoesntexist', 'thistrackdoesntexist')
 print(track_json)
+
+track_json = p.get('artist', 'Kim Petras')
+print(track_json)

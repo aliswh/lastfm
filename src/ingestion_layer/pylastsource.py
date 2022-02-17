@@ -67,8 +67,8 @@ class PyLastSource(Source):
     def get_tags(some_obj):
       """ Returns a dict of the top tags set by users to this object.
       """ 
-      tag = {tag.item.name for tag in some_obj.get_top_tags(limit=TAG_LIMIT)}
-      tag = {t:give_id(t) for t in tag}
+      tag = [tag.item.name for tag in some_obj.get_top_tags(limit=TAG_LIMIT)]
+      #tag = {t:give_id(t) for t in tag} #TODO keep it?
       return tag
 
     def get_user(user_name):
@@ -111,10 +111,13 @@ class PyLastSource(Source):
       try: url = artist.get_url()
       except: url = None
 
+      top_tracks = [get_track(item.item, '') for item in artist.get_top_tracks()[:3]]
+
       d = {
         'artist' : artist.name,
         'bio' : bio,
-        'url' : url
+        'url' : url, 
+        'top_tracks' : top_tracks
       }
       d['id'] = give_id(d['artist']) 
       return d
@@ -122,15 +125,9 @@ class PyLastSource(Source):
     def get_track(artist, title):
       """ Returns Track dict.
       """
-      try: track = self.network.get_track(artist,title)
-      except: 
-        print('Track not found')
-        d = {
-        'artist' : artist,
-        'title': title,
-        'not found': True
-        }
-        return d 
+      if not isinstance(artist, pylast.Track):
+        track = self.network.get_track(artist, title)
+      else: track = artist
 
       try: album = track.get_album().title
       except: album = None
