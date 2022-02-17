@@ -9,6 +9,8 @@ class BatchWriter(Writer):
         if dest_path != '':
             dest_path = dest_path + '/'
         global_top_tags = self.source.get('get_global_top_tags')
+        if debug:
+            print(f'[Global top tags] {global_top_tags}')
         self.dest.write(global_top_tags, dest_path+"global_top_tags")
         users = self.source.get('user_pool',seed_user,MAX=users_limit)
         for user in users:
