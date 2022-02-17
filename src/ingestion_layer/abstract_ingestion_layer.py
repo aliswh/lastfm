@@ -34,20 +34,10 @@ class Writer(ABC):
         pass
 
     @abstractmethod
-    def write(self, request, dest_path:str):
+    def write(self, dest_path:str, *args, **kargs):
         """
         Process a request and save in destination.
 
         """
         pass
-        
-
-class BatchWriter(Writer):
-    def __init__(self, source, destination):
-        self.source = source
-        self.dest = destination
-
-    def write(self, request, dest_path):
-        data = self.source.get(request)
-        self.dest.write(data, dest_path)
 
