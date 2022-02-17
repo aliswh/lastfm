@@ -179,10 +179,10 @@ class PyLastSource(Source):
         limit=limit, cacheable=cacheable, stream=stream, 
         time_from=time_from, time_to=time_to, now_playing=now_playing
       )
-      d = {}
-      for i,track in enumerate(recent):
-        d[i] = get_playedtrack(track) # TODO timestamp o ordine? o lista?
-      d['id'] = give_id(user_name) # TODO
+      d = []
+      d.append(user_name)
+      for track in recent:
+        d.append(get_playedtrack(track)) 
       return d
 
     def user_pool(user_name, MAX=20):
