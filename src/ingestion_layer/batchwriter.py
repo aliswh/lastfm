@@ -6,6 +6,8 @@ class BatchWriter(Writer):
         self.dest = destination
 
     def write(self, dest_path, seed_user, users_limit, tracks_limit, debug = False):
+        if dest_path != '':
+            dest_path = dest_path + '/'
         users = self.source.get('user_pool',seed_user,MAX=users_limit)
         for user in users:
             if debug:
@@ -19,6 +21,7 @@ class BatchWriter(Writer):
                 self.dest.write(track, dest_path+f"tracks/track_{track['id']}")
                 self.dest.write(artist, dest_path+f"artists/artist_{artist['id']}")
                 if debug:
-                    print(f'[Track] {track}')
                     print(f'[Artist] {artist}')
-                    print()
+                    print(f'[Track] {track}')
+            if debug:
+                print()
