@@ -66,11 +66,17 @@ class PyLastSource(Source):
 
     # LastFM
     def get_tags(some_obj):
-      """ Returns a dict of the top tags set by users to this object.
+      """ Returns a list of the top tags set by users to this object.
       """ 
       tag = [tag.item.name for tag in some_obj.get_top_tags(limit=TAG_LIMIT)]
       #tag = {t:give_id(t) for t in tag} #TODO keep it?
       return tag
+
+    def get_top_tags():
+      """ Returns a list of the global top tags.
+      """ 
+      top_tags = [tag.item.name for tag in self.network.get_top_tags()]
+      return top_tags
 
     def get_user(user_name):
       """ Returns User dict.
@@ -206,6 +212,7 @@ class PyLastSource(Source):
         'track': get_track,
         'recent_tracks': get_recent_tracks,
         'tags': get_tags,
+        'top_tags': get_top_tags,
         'user_pool': user_pool
     }
 

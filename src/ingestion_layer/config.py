@@ -9,7 +9,7 @@ AUTH_DATA = {
   'username' : "aliswh",
   'password' : "Music4!" #TODO: security?
 }
-TAG_LIMIT = 30 # restricted number of tags to maintain quality and save storage
+TAG_LIMIT = 15 # restricted number of tags to maintain quality and save storage
 
 #BatchWriter config
 users_limit = 10
