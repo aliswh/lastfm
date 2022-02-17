@@ -136,7 +136,7 @@ class PyLastSource(Source):
       except: album = None
 
       try: duration = track.get_duration()
-      except: duration = None 
+      except: duration = 0 
 
       try: url = track.get_url()
       except: url = None
