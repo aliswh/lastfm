@@ -72,7 +72,7 @@ class PyLastSource(Source):
       #tag = {t:give_id(t) for t in tag} #TODO keep it?
       return tag
 
-    def get_top_tags():
+    def get_global_top_tags():
       """ Returns a list of the global top tags.
       """ 
       top_tags = [tag.item.name for tag in self.network.get_top_tags()]
@@ -212,7 +212,7 @@ class PyLastSource(Source):
         'track': get_track,
         'recent_tracks': get_recent_tracks,
         'tags': get_tags,
-        'top_tags': get_top_tags,
+        'global_top_tags': get_global_top_tags,
         'user_pool': user_pool
     }
 
