@@ -79,14 +79,23 @@ class PyLastSource(Source):
       else: user = user_name
 
       try: country = user.get_country().name 
-      except AttributeError: country = None
+      except: country = None
+
+      try: playcount = user.get_playcount()
+      except: playcount = None
+
+      try: reg_date = user.get_registered()
+      except: reg_date = None
+
+      try: url = user.get_url()
+      except: url = None
 
       d = {
         'user' : user.name,
-        'playcount': user.get_playcount(),
-        'reg_date' : user.get_registered(),
+        'playcount': playcount,
+        'reg_date' : reg_date,
         'country' : country,
-        'url' : user.get_url()
+        'url' : url
       }
       d['id'] = give_id(d['user']) 
       return d
@@ -95,10 +104,17 @@ class PyLastSource(Source):
       """ Returns Artist dict.
       """
       artist = self.network.get_artist(artist_name)
+
+      try: bio = artist.get_bio("summary")
+      except: bio = None
+
+      try: url = artist.get_url()
+      except: url = None
+
       d = {
         'artist' : artist.name,
-        'bio' : artist.get_bio("summary"),
-        'url' : artist.get_url()
+        'bio' : bio,
+        'url' : url
       }
       d['id'] = give_id(d['artist']) 
       return d
@@ -106,18 +122,35 @@ class PyLastSource(Source):
     def get_track(artist, title):
       """ Returns Track dict.
       """
-      track = self.network.get_track(artist,title)
+      try: track = self.network.get_track(artist,title)
+      except: 
+        print('Track not found')
+        d = {
+        'artist' : artist,
+        'title': title,
+        'not found': True
+        }
+        return d 
 
       try: album = track.get_album().title
-      except AttributeError: album = None
+      except: album = None
+
+      try: duration = track.get_duration()
+      except: duration = None 
+
+      try: url = track.get_url()
+      except: url = None
+
+      try: tags = get_tags(track)
+      except: tags = None
 
       d = {
         'artist' : track.artist.name,
         'title': track.title,
         'album': album,
-        'duration': track.get_duration(),
-        'tags': get_tags(track),
-        'url': track.get_url()
+        'duration': duration,
+        'tags': tags,
+        'url': url
       }
       d['id'] = give_id(d['artist']+d['title']) 
       return d

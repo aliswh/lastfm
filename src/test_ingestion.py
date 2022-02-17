@@ -23,3 +23,11 @@ print(user_tracks_json)
 
 user_pool_json = p.get('user_pool', SEED_USER, MAX=10)
 print(user_pool_json)
+
+track_json = p.get('track', 'Rich Nanni', 'Macaroni')
+print(track_json)
+
+print(json.dumps(track_json))
+
+track_json = p.get('track', 'thisartistdoesntexist', 'thistrackdoesntexist')
+print(track_json)
