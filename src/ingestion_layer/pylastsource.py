@@ -73,9 +73,9 @@ class PyLastSource(Source):
       return tag
 
     def get_global_top_tags():
-      """ Returns a list of the global top tags.
+      """ Returns a dictionary of the global top tags.
       """ 
-      top_tags = [tag.item.name for tag in self.network.get_top_tags()]
+      top_tags = {tag.item.name:int(tag.weight) for tag in self.network.get_top_tags()}
       return top_tags
 
     def get_user(user_name):
