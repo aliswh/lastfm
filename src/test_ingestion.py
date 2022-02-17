@@ -18,6 +18,9 @@ print(user_json)
 track_json = p.get('track', 'Charli XCX', 'Vroom Vroom')
 print(track_json)
 
+track_json = p.get('track', 'Kim Petras', 'XXX')
+print(track_json)
+
 user_tracks_json = p.get('recent_tracks', SEED_USER, limit=10,  time_to=onemonthago)
 print(user_tracks_json)
 
