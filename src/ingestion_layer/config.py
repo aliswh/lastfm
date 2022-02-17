@@ -1,6 +1,6 @@
 #Google Storage config
-bucket_name = 'erudite-host-341412.appspot.com'
-creds_path = 'erudite-host-341412-a0961664e5cd.json'
+BUCKET_NAME = 'erudite-host-341412.appspot.com'
+CREDS_PATH = 'erudite-host-341412-a0961664e5cd.json'
 
 #Pylast config
 AUTH_DATA = {
@@ -12,6 +12,7 @@ AUTH_DATA = {
 TAG_LIMIT = 15 # restricted number of tags to maintain quality and save storage
 
 #BatchWriter config
-users_limit = 10
-tracks_limit = 10
+SEED_USER = 'Mahmud_Zaeni'
+USERS_LIMIT = 10
+TRACKS_LIMIT = 10
 
