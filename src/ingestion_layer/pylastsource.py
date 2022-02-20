@@ -68,7 +68,7 @@ class PyLastSource(Source):
     def get_tags(some_obj):
       """ Returns a list of the top tags set by users to this object.
       """ 
-      tag = {item.item.name:int(item.weight) for item in track.get_top_tags()[:TAG_LIMIT]} 
+      tag = {item.item.name:int(item.weight) for item in some_obj.get_top_tags()[:TAG_LIMIT]} 
       return tag
 
     def get_global_top_tags():
