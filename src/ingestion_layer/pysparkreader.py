@@ -14,6 +14,6 @@ class PySparkReader(Reader):
         path = f'gs://{self.bucket}/'+path
         if dir:
             path = path+'/*'
-        df = self.dest.read.option("multiline","true").json(path)
+        df = self.dest.read.option("multiline","true").json(path).cache()
         return df.rdd.map(lambda x: pyspark.sql.Row.asDict(x)).persist()
             
