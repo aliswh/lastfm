@@ -1,6 +1,6 @@
 #Google Storage config
 BUCKET_NAME = 'erudite-host-341412.appspot.com'
-CREDS_PATH = 'erudite-host-341412-a0961664e5cd.json'
+CREDS_PATH = 'creds.json'
 
 #Pylast config
 AUTH_DATA = {
