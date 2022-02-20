@@ -182,10 +182,10 @@ class PyLastSource(Source):
         limit=limit, cacheable=cacheable, stream=stream, 
         time_from=time_from, time_to=time_to, now_playing=now_playing
       )
-      d = []
-      d.append(user_name)
+      session = []
       for track in recent:
-        d.append(get_playedtrack(track)) 
+        session.append(get_playedtrack(track)) 
+      d = {user_name:session}
       return d
 
     def user_pool(user_name, MAX=20):
