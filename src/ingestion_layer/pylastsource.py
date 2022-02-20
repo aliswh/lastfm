@@ -185,7 +185,10 @@ class PyLastSource(Source):
       session = []
       for track in recent:
         session.append(get_playedtrack(track)) 
-      d = {user_name:session}
+      d = {
+        'user':user_name,
+        'recent_tracks':session
+      }
       return d
 
     def user_pool(user_name, MAX=20):
