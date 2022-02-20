@@ -22,7 +22,7 @@ class DataLake(ABC):
     @abstractmethod
     def read(self, path:str):
         """
-        Write data from a specified path
+        Read data from a specified path
 
         """
         pass
@@ -41,3 +41,7 @@ class Writer(ABC):
         """
         pass
 
+class Reader(ABC):
+    @abstractmethod
+    def read(self, path:str):
+        pass

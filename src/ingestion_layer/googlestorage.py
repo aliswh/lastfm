@@ -5,7 +5,6 @@ import json
 class GoogleStorageJSON(DataLake):
 
     def __init__(self, creds_path, bucket_name):
-
         self.client = storage.Client.from_service_account_json(creds_path)
         self.bucket = self.client.get_bucket(bucket_name)
 
