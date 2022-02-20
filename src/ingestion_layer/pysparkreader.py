@@ -15,5 +15,5 @@ class PySparkReader(Reader):
         if dir:
             path = path+'/*'
         df = self.dest.read.json(path)
-        return df.rdd.map(lambda x: pyspark.sql.Row.asDict(x)).persist()
+        return df.rdd.map(lambda x: pyspark.sql.Row.asDict(x, recursive=True)).persist()
             
