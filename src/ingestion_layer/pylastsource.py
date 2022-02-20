@@ -144,7 +144,7 @@ class PyLastSource(Source):
       try: url = track.get_url()
       except: url = None
 
-      try: tags = track.get_tags()
+      try: tags = get_tags(track)
       except: tags = None
 
       d = {
