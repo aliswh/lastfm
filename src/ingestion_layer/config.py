@@ -1,5 +1,5 @@
 #Google Storage config
-BUCKET_NAME = 'erudite-host-341412.appspot.com'
+BUCKET_NAME = 'a4bd-project-2.appspot.com'
 CREDS_PATH = 'creds.json'
 
 #Pylast config
