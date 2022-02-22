@@ -14,6 +14,7 @@ class PySparkReader(Reader):
         path = f'gs://{self.bucket}/'+path
         if dir:
             path = path+'/*'
-        df = self.dest.read.json(path)
-        return df.rdd.map(lambda x: pyspark.sql.Row.asDict(x)).persist()
+            
+        df = self.dest.textFile(path).map(lambda x: json.loads(x))
+        return df
             
