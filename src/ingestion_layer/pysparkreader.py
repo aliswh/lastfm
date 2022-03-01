@@ -4,8 +4,8 @@ import pyspark
 import json
 
 class PySparkReader(Reader):
-    def __init__(self, pysparksession, creds_path=CREDS_PATH, bucket=BUCKET_NAME):
-        self.dest = pysparksession
+    def __init__(self, pysparkcontext, creds_path=CREDS_PATH, bucket=BUCKET_NAME):
+        self.dest = pysparkcontext
         self.bucket = bucket
         self.dest._jsc.hadoopConfiguration().set("google.cloud.auth.service.account.json.keyfile",'./lastfm/src/ingestion_layer/'+creds_path)
 
@@ -16,6 +16,6 @@ class PySparkReader(Reader):
         if dir:
             path = path+'/*'
             
-        df = self.dest.textFile(path).map(lambda x: json.loads(x))
-        return df
+        rdd = self.dest.textFile(path).map(lambda x: json.loads(x)).persist()
+        return rdd
             
